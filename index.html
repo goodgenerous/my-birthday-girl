@@ -155,16 +155,22 @@
     box-shadow: 0 4px 20px rgba(107,76,59,0.12);
   }
   .slides-viewport {
-    /* Enforce 3:4 portrait ratio matching 1536x2048 photos */
     width: 100%;
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
     position: relative;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   .slides {
     display: flex;
     height: 100%;
+    -webkit-transition: -webkit-transform 0.7s cubic-bezier(.77,0,.18,1);
     transition: transform 0.7s cubic-bezier(.77,0,.18,1);
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   .slide {
     min-width: 100%;
@@ -176,13 +182,17 @@
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   .slide img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center top;
     display: block;
-    background: transparent;
   }
   .slide-caption {
     position: absolute; bottom: 14px; left: 0; right: 0;
@@ -572,7 +582,9 @@
 
   function goSlide(idx) {
     curSlide = idx;
-    document.getElementById('slides').style.transform = 'translateX(-' + (idx*100) + '%)';
+    var slidesEl = document.getElementById('slides');
+    slidesEl.style.webkitTransform = 'translateX(-' + (idx*100) + '%)';
+    slidesEl.style.transform = 'translateX(-' + (idx*100) + '%)';;
     var dots = document.querySelectorAll('.dot');
     dots.forEach(function(d,i){ d.className = 'dot'+(i===idx?' active':''); });
   }
