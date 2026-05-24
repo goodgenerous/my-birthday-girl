@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Happy Birthday Tengku Dinda 💕</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Happy Birthday, Tengku Dinda 💕</title>
 </head>
 <body style="margin:0;padding:0;background:#FFF8F0;">
 
@@ -30,13 +32,16 @@
     font-family: 'Lato', sans-serif;
     background: var(--cream);
     min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
+    min-height: -webkit-fill-available;
+    overflow: hidden;
     position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   /* ---- PAGE SYSTEM ---- */
-  .page { display: none; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+  .page { display: none; flex-direction: column; min-height: 100vh; min-height: -webkit-fill-available; }
   .page.active { display: flex; }
 
   /* ---- CONFETTI CANVAS ---- */
@@ -143,10 +148,7 @@
     color: var(--earth2); text-align: center; margin-bottom: 8px;
   }
   .slideshow-wrap {
-    margin: 0 auto 18px;
-    /* Max width: on mobile fill screen minus margins; on desktop cap at portrait width */
-    width: calc(100% - 32px);
-    max-width: 360px;
+    margin: 0 16px 18px;
     border-radius: 18px;
     overflow: hidden;
     position: relative;
@@ -154,56 +156,24 @@
     border: 1px solid rgba(161,120,90,0.2);
     box-shadow: 0 4px 20px rgba(107,76,59,0.12);
   }
-  .slides-viewport {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    -webkit-overflow-scrolling: touch;
-    position: relative;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-  .slides {
-    display: flex;
-    height: 100%;
-    -webkit-transition: -webkit-transform 0.7s cubic-bezier(.77,0,.18,1);
-    transition: transform 0.7s cubic-bezier(.77,0,.18,1);
-    will-change: transform;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
+  .slides { display: flex; transition: transform 0.7s cubic-bezier(.77,0,.18,1); }
   .slide {
-    min-width: 100%;
-    height: 100%;
+    min-width: 100%; height: clamp(180px, 50vw, 280px);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     font-family: 'Playfair Display', serif;
     font-style: italic;
     position: relative;
     overflow: hidden;
-    flex-shrink: 0;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
-  .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
   }
   .slide-caption {
     position: absolute; bottom: 14px; left: 0; right: 0;
     text-align: center;
-    font-size: clamp(12px, 3.5vw, 15px);
+    font-size: 13px;
     color: rgba(255,255,255,0.95);
-    text-shadow: 0 1px 8px rgba(0,0,0,0.55), 0 2px 16px rgba(0,0,0,0.35);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.4);
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    padding: 0 12px;
-    padding-top: 28px;
   }
   .slide-dots {
     display: flex; justify-content: center; gap: 6px; padding: 10px 0 12px;
@@ -214,14 +184,6 @@
     transition: background 0.3s, transform 0.3s;
   }
   .dot.active { background: var(--rose); transform: scale(1.3); }
-
-  /* Responsive breakpoints */
-  @media (min-width: 480px) {
-    .slideshow-wrap { max-width: 380px; }
-  }
-  @media (min-width: 768px) {
-    .slideshow-wrap { max-width: 400px; }
-  }
 
   /* SECTION 3 – NEXT SURPRISE */
   .next-btn-wrap { padding: 0 16px 16px; }
@@ -249,14 +211,8 @@
   }
   .balloon {
     position: absolute; bottom: -10px;
-    -webkit-animation: floatUp 5s ease-in infinite;
     animation: floatUp 5s ease-in infinite;
     opacity: 0.9;
-  }
-  @-webkit-keyframes floatUp {
-    0%   { -webkit-transform: translateY(0) rotate(-5deg); opacity: 0.9; }
-    50%  { -webkit-transform: translateY(-120px) rotate(5deg); opacity: 0.8; }
-    100% { -webkit-transform: translateY(-200px) rotate(-3deg); opacity: 0; }
   }
   @keyframes floatUp {
     0%   { transform: translateY(0) rotate(-5deg); opacity: 0.9; }
@@ -405,32 +361,30 @@
     <!-- SECTION 2: SLIDESHOW -->
     <p class="section-label">Our Memories!</p>
     <div class="slideshow-wrap">
-      <div class="slides-viewport">
-        <div class="slides" id="slides">
-          <div class="slide" style="background: linear-gradient(135deg, #C4A882, #A0785A);">
-            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779444826/FOTO_BANDUNG_vzxnka.jpg" alt="Memory 1"/>
-            <div class="slide-caption">asik pertama kalinya liburan bareng!</div>
-          </div>
-          <div class="slide" style="background: linear-gradient(135deg, #7A9E7E, #5C8060);">
-            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779595328/foto_bromo.jpg" alt="Memory 2"/>
-            <div class="slide-caption">nah klo ini kita ke Bromo!</div>
-          </div>
-          <div class="slide" style="background: linear-gradient(135deg, #C17B7B, #9B5C5C);">
-            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779595219/FOTO_MALANG_f7nsou.jpg" alt="Memory 3"/>
-            <div class="slide-caption">dinner ceunah with my family!</div>
-          </div>
-          <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
-            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779596370/fotobooth.jpg" alt="Memory 4"/>
-            <div class="slide-caption">photobooth pertama kita!</div>
-          </div>
-          <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
-            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779597313/FOTO_LARI_bx9lhq.jpg" alt="Memory 5"/>
-            <div class="slide-caption">foto dulu sebelum lari!</div>
-          </div>
-          <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
-            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779597442/FOTO_MALL_lopiwk.jpg" alt="Memory 6"/>
-            <div class="slide-caption">Photobooth pertama kita!</div>
-          </div>
+      <div class="slides" id="slides">
+        <div class="slide" style="background: linear-gradient(135deg, #C4A882, #A0785A);">
+          <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779444826/FOTO_BANDUNG_vzxnka.jpg" alt="Memory 1" width="100%" height="fit-content"/>
+          <div class="slide-caption">asik pertama kalinya liburan bareng!</div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #7A9E7E, #5C8060);">
+          <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779595328/foto_bromo.jpg" alt="Memory 1" width="100%" height="fit-content"/>
+          <div class="slide-caption">nah klo ini kita ke Bromo!</div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #C17B7B, #9B5C5C);">
+          <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779595219/FOTO_MALANG_f7nsou.jpg" alt="Memory 1" width="100%" height="fit-content"/>
+          <div class="slide-caption">dinner ceunah with my family!</div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
+          <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779596370/fotobooth.jpg" alt="Memory 1" width="100%" height="fit-content"/>
+          <div class="slide-caption">photobooth pertama kita!</div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
+          <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779597313/FOTO_LARI_bx9lhq.jpg" alt="Memory 1" width="100%" height="fit-content"/>
+          <div class="slide-caption">foto dulu sebelum lari!</div>
+        </div>
+        <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
+          <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779597442/FOTO_MALL_lopiwk.jpg" alt="Memory 1" width="100%" height="fit-content"/>
+          <div class="slide-caption">Photobooth pertama kita!</div>
         </div>
       </div>
       <div class="slide-dots" id="dots"></div>
@@ -582,9 +536,7 @@
 
   function goSlide(idx) {
     curSlide = idx;
-    var slidesEl = document.getElementById('slides');
-    slidesEl.style.webkitTransform = 'translateX(-' + (idx*100) + '%)';
-    slidesEl.style.transform = 'translateX(-' + (idx*100) + '%)';;
+    document.getElementById('slides').style.transform = 'translateX(-' + (idx*100) + '%)';
     var dots = document.querySelectorAll('.dot');
     dots.forEach(function(d,i){ d.className = 'dot'+(i===idx?' active':''); });
   }
