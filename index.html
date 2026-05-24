@@ -480,9 +480,8 @@
   var animId;
 
   function resizeCanvas() {
-    var app = document.getElementById('bday-app');
-    canvas.width  = app.offsetWidth;
-    canvas.height = app.offsetHeight;
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
 
   function spawnConfetti(n) {
@@ -607,6 +606,7 @@
 
   window.handleYes = function() {
     document.getElementById('modal').classList.add('open');
+    resizeCanvas();
     launchConfetti(200);
     setTimeout(function(){ launchConfetti(150); }, 800);
     setTimeout(function(){ launchConfetti(100); }, 1600);
@@ -620,6 +620,7 @@
   /* initial gentle confetti */
   setTimeout(function() { launchConfetti(60); }, 600);
   resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
 })();
 </script>
