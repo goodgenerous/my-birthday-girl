@@ -1,0 +1,628 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --earth1: #6B4C3B;
+    --earth2: #A0785A;
+    --earth3: #C4A882;
+    --earth4: #E8D5B7;
+    --earth5: #F5ECD7;
+    --earth6: #FBF6EE;
+    --rose:   #C17B7B;
+    --roseli: #EDD5C5;
+    --sage:   #7A9E7E;
+    --cream:  #FFF8F0;
+    --gold:   #B8860B;
+  }
+
+  #bday-app {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    min-height: 600px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ---- PAGE SYSTEM ---- */
+  .page { display: none; flex-direction: column; min-height: 600px; }
+  .page.active { display: flex; }
+
+  /* ---- CONFETTI CANVAS ---- */
+  #confetti-canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 99;
+  }
+
+  /* ======== PAGE 1 ======== */
+  #page1 { background: linear-gradient(160deg, #FBF6EE 0%, #EDD5C5 60%, #C4A882 100%); }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 32px 20px 20px;
+    position: relative;
+  }
+  .header-sub {
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--earth2);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 44px);
+    color: var(--earth1);
+    line-height: 1.2;
+    text-shadow: 1px 2px 8px rgba(107,76,59,0.15);
+  }
+  .header h1 span { color: var(--rose); font-style: italic; }
+
+  .deco-row {
+    display: flex; justify-content: center; align-items: center; gap: 12px;
+    margin: 10px 0;
+  }
+  .deco-line { height: 1px; width: 60px; background: var(--earth3); }
+  .deco-icon { font-size: 20px; }
+
+  /* SVG DECO */
+  .svg-deco { display: flex; justify-content: center; margin: 4px 0; }
+
+  /* SECTION 1 – GREETING CARD */
+  .section-card {
+    margin: 0 16px 20px;
+    background: rgba(255,255,255,0.82);
+    border-radius: 20px;
+    padding: 24px 22px;
+    border: 1px solid rgba(161,120,90,0.2);
+    box-shadow: 0 4px 24px rgba(107,76,59,0.10);
+    position: relative;
+    overflow: hidden;
+  }
+  .section-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--rose), var(--earth3), var(--sage));
+    border-radius: 20px 20px 0 0;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--earth1);
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  .card-text {
+    font-size: 14px;
+    color: var(--earth2);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .card-sig {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--rose);
+    text-align: right;
+    font-style: italic;
+  }
+
+  .btn-surprise {
+    display: block; width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--rose), var(--earth2));
+    color: #fff;
+    border: none; border-radius: 50px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(193,123,123,0.35);
+    margin-top: 4px;
+  }
+  .btn-surprise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(193,123,123,0.45); }
+  .btn-surprise:active { transform: scale(0.97); }
+
+  /* SECTION 2 – SLIDESHOW */
+  .section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--earth2); text-align: center; margin-bottom: 8px;
+  }
+  .slideshow-wrap {
+    margin: 0 auto 18px;
+    /* Max width: on mobile fill screen minus margins; on desktop cap at portrait width */
+    width: calc(100% - 32px);
+    max-width: 360px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    background: var(--earth4);
+    border: 1px solid rgba(161,120,90,0.2);
+    box-shadow: 0 4px 20px rgba(107,76,59,0.12);
+  }
+  .slides-viewport {
+    /* Enforce 3:4 portrait ratio matching 1536x2048 photos */
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    position: relative;
+  }
+  .slides {
+    display: flex;
+    height: 100%;
+    transition: transform 0.7s cubic-bezier(.77,0,.18,1);
+  }
+  .slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+  .slide-caption {
+    position: absolute; bottom: 14px; left: 0; right: 0;
+    text-align: center;
+    font-size: clamp(12px, 3.5vw, 15px);
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.55), 0 2px 16px rgba(0,0,0,0.35);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    padding: 0 12px;
+    padding-top: 28px;
+  }
+  .slide-dots {
+    display: flex; justify-content: center; gap: 6px; padding: 10px 0 12px;
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--earth3); cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .dot.active { background: var(--rose); transform: scale(1.3); }
+
+  /* Responsive breakpoints */
+  @media (min-width: 480px) {
+    .slideshow-wrap { max-width: 380px; }
+  }
+  @media (min-width: 768px) {
+    .slideshow-wrap { max-width: 400px; }
+  }
+
+  /* SECTION 3 – NEXT SURPRISE */
+  .next-btn-wrap { padding: 0 16px 16px; }
+  .btn-next {
+    display: block; width: 100%;
+    padding: 14px;
+    background: var(--earth1);
+    color: #FBF6EE;
+    border: none; border-radius: 50px;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-style: italic;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s, background 0.2s;
+    box-shadow: 0 4px 18px rgba(107,76,59,0.25);
+  }
+  .btn-next:hover { background: var(--rose); transform: translateY(-2px); }
+  .btn-next:active { transform: scale(0.97); }
+
+  /* FOOTER BALLOONS */
+  .footer-area {
+    position: relative; height: 90px; overflow: hidden;
+    background: linear-gradient(0deg, rgba(196,168,130,0.3), transparent);
+    margin-top: auto;
+  }
+  .balloon {
+    position: absolute; bottom: -10px;
+    animation: floatUp 5s ease-in infinite;
+    opacity: 0.9;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(-5deg); opacity: 0.9; }
+    50%  { transform: translateY(-120px) rotate(5deg); opacity: 0.8; }
+    100% { transform: translateY(-200px) rotate(-3deg); opacity: 0; }
+  }
+
+  /* ======== PAGE 2 ======== */
+  #page2 {
+    background: linear-gradient(160deg, #FBF6EE 0%, #EDD5C5 50%, #C4A882 100%);
+    align-items: center; justify-content: center;
+    text-align: center; padding: 30px 20px;
+    position: relative;
+  }
+  .p2-inner { max-width: 460px; width: 100%; }
+  .p2-deco { margin-bottom: 18px; }
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 7vw, 52px);
+    color: var(--earth1);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .question-text em { color: var(--rose); }
+  .question-sub {
+    font-size: 13px; color: var(--earth2);
+    letter-spacing: 1px; margin-bottom: 28px;
+  }
+  .p2-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-yes {
+    flex: 1; min-width: 120px; max-width: 180px;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--rose), #A85555);
+    color: #fff; border: none; border-radius: 50px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-style: italic;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(193,123,123,0.4);
+  }
+  .btn-yes:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(193,123,123,0.5); }
+  .btn-no {
+    flex: 1; min-width: 100px; max-width: 140px;
+    padding: 15px 20px;
+    background: transparent;
+    color: var(--earth2);
+    border: 1.5px solid var(--earth3);
+    border-radius: 50px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .btn-no:hover { background: var(--earth4); }
+  .no-msg {
+    margin-top: 14px; font-size: 14px;
+    color: var(--rose); font-style: italic;
+    min-height: 22px; font-family: 'Playfair Display', serif;
+  }
+
+  /* MODAL */
+  .modal-bg {
+    display: none; position: absolute; inset: 0;
+    background: rgba(107,76,59,0.55);
+    z-index: 50; align-items: center; justify-content: center;
+    border-radius: 0;
+  }
+  .modal-bg.open { display: flex; }
+  .modal-box {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 32px 28px;
+    max-width: 320px; width: 90%;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(107,76,59,0.25);
+    border: 1px solid rgba(193,123,123,0.25);
+    animation: popIn 0.4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .modal-emoji { font-size: 40px; margin-bottom: 12px; }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--earth1);
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .modal-sub { font-size: 13px; color: var(--earth2); margin-bottom: 18px; line-height: 1.6; }
+  .modal-close {
+    padding: 10px 28px;
+    background: linear-gradient(135deg, var(--rose), var(--earth2));
+    color: #fff; border: none; border-radius: 50px;
+    font-family: 'Lato', sans-serif; font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(193,123,123,0.3);
+  }
+  .modal-close:hover { opacity: 0.9; }
+</style>
+
+<div id="bday-app">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ====== PAGE 1 ====== -->
+  <div id="page1" class="page active">
+
+    <!-- HEADER -->
+    <div class="header">
+      <p class="header-sub">A special message for you</p>
+      <h1>Happy Birthday,<br><span>Tengku Dinda Meisyahrita💕!</span></h1>
+      <div class="deco-row">
+        <div class="deco-line"></div>
+        <svg width="60" height="28" viewBox="0 0 60 28">
+          <!-- cake -->
+          <rect x="12" y="14" width="36" height="12" rx="3" fill="#C4A882"/>
+          <rect x="16" y="10" width="28" height="6" rx="2" fill="#E8D5B7"/>
+          <rect x="28" y="4" width="4" height="8" rx="2" fill="#A0785A"/>
+          <circle cx="30" cy="4" r="2.5" fill="#C17B7B"/>
+          <!-- flower -->
+          <circle cx="52" cy="10" r="3" fill="#EDD5C5"/>
+          <circle cx="52" cy="4"  r="2" fill="#C17B7B"/>
+          <circle cx="57" cy="8" r="2" fill="#C17B7B"/>
+          <circle cx="55" cy="14" r="2" fill="#C17B7B"/>
+          <circle cx="48" cy="14" r="2" fill="#C17B7B"/>
+          <circle cx="46" cy="8"  r="2" fill="#C17B7B"/>
+          <!-- balloon -->
+          <ellipse cx="8" cy="8" rx="5" ry="6" fill="#C17B7B"/>
+          <line x1="8" y1="14" x2="8" y2="22" stroke="#A0785A" stroke-width="1"/>
+        </svg>
+        <div class="deco-line"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: GREETING CARD -->
+    <div class="section-card">
+      <p class="card-title">For My Dearest Dinda!</p>
+      <p class="card-text">
+        On this special day, I want you to know—every moment with you feels like the greatest gift I could ever receive. Your smile and your laughter is pure joy, and the way you see life adds so much beauty to mine. May your dreams unfold into reality, and may this birthday be the beginning of a truly wonderful chapter ahead 🌹
+      </p>
+      <p class="card-sig">— with love, Bagus 🌸</p>
+      <button class="btn-surprise" onclick="handleSurprise()">
+        ✨ Click for a surprise! ✨
+      </button>
+    </div>
+
+    <!-- SECTION 2: SLIDESHOW -->
+    <p class="section-label">Our Memories!</p>
+    <div class="slideshow-wrap">
+      <div class="slides-viewport">
+        <div class="slides" id="slides">
+          <div class="slide" style="background: linear-gradient(135deg, #C4A882, #A0785A);">
+            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779444826/FOTO_BANDUNG_vzxnka.jpg" alt="Memory 1"/>
+            <div class="slide-caption">asik pertama kalinya liburan bareng!</div>
+          </div>
+          <div class="slide" style="background: linear-gradient(135deg, #7A9E7E, #5C8060);">
+            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779595328/foto_bromo.jpg" alt="Memory 2"/>
+            <div class="slide-caption">nah klo ini kita ke Bromo!</div>
+          </div>
+          <div class="slide" style="background: linear-gradient(135deg, #C17B7B, #9B5C5C);">
+            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779595219/FOTO_MALANG_f7nsou.jpg" alt="Memory 3"/>
+            <div class="slide-caption">dinner ceunah with my family!</div>
+          </div>
+          <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
+            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779596370/fotobooth.jpg" alt="Memory 4"/>
+            <div class="slide-caption">photobooth pertama kita!</div>
+          </div>
+          <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
+            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779597313/FOTO_LARI_bx9lhq.jpg" alt="Memory 5"/>
+            <div class="slide-caption">foto dulu sebelum lari!</div>
+          </div>
+          <div class="slide" style="background: linear-gradient(135deg, #B8860B, #8B6508);">
+            <img src="https://res.cloudinary.com/dvj5mcejc/image/upload/v1779597442/FOTO_MALL_lopiwk.jpg" alt="Memory 6"/>
+            <div class="slide-caption">Photobooth pertama kita!</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-dots" id="dots"></div>
+    </div>
+
+    <!-- SECTION 3: NEXT SURPRISE -->
+    <div class="next-btn-wrap">
+      <button class="btn-next" onclick="goPage2()">
+        Next Surprise →
+      </button>
+    </div>
+
+    <!-- FOOTER BALLOONS -->
+    <div class="footer-area" id="balloonArea"></div>
+  </div>
+
+  <!-- ====== PAGE 2 ====== -->
+  <div id="page2" class="page">
+    <div class="p2-inner">
+      <div class="p2-deco">
+        <svg width="120" height="80" viewBox="0 0 120 80">
+          <!-- 3 balloons -->
+          <ellipse cx="20" cy="28" rx="14" ry="18" fill="#C17B7B"/>
+          <path d="M20 46 Q18 56 22 62" fill="none" stroke="#A0785A" stroke-width="1.5"/>
+          <ellipse cx="60" cy="22" rx="16" ry="20" fill="#C4A882"/>
+          <path d="M60 42 Q58 56 62 68" fill="none" stroke="#A0785A" stroke-width="1.5"/>
+          <ellipse cx="100" cy="28" rx="14" ry="18" fill="#7A9E7E"/>
+          <path d="M100 46 Q98 56 102 62" fill="none" stroke="#A0785A" stroke-width="1.5"/>
+          <!-- flowers -->
+          <circle cx="30" cy="72" r="4" fill="#EDD5C5"/>
+          <circle cx="30" cy="64" r="3" fill="#C17B7B"/>
+          <circle cx="37" cy="68" r="3" fill="#C17B7B"/>
+          <circle cx="34" cy="76" r="3" fill="#C17B7B"/>
+          <circle cx="24" cy="76" r="3" fill="#C17B7B"/>
+          <circle cx="22" cy="68" r="3" fill="#C17B7B"/>
+          <circle cx="88" cy="72" r="4" fill="#EDD5C5"/>
+          <circle cx="88" cy="64" r="3" fill="#B8860B"/>
+          <circle cx="95" cy="68" r="3" fill="#B8860B"/>
+          <circle cx="92" cy="76" r="3" fill="#B8860B"/>
+          <circle cx="82" cy="76" r="3" fill="#B8860B"/>
+          <circle cx="80" cy="68" r="3" fill="#B8860B"/>
+        </svg>
+      </div>
+
+      <p class="question-sub">From my heart to yours, here it goes…</p>
+      <h2 class="question-text">Will you be<br>my <em>girlfriend?</em></h2>
+      <p class="question-sub" style="margin-top:6px; margin-bottom:28px;">— speak from your heart yah sayang!🌷</p>
+
+      <div class="p2-btns">
+        <button class="btn-yes" onclick="handleYes()">Yes! 💕</button>
+        <button class="btn-no" onclick="handleNo()">No...</button>
+      </div>
+      <p class="no-msg" id="noMsg"></p>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-bg" id="modal">
+      <div class="modal-box">
+        <div class="modal-emoji">🎉</div>
+        <h3 class="modal-title">Hooray! You’re officially mine 💕</h3>
+        <p class="modal-sub">I vow to stand with you, to make you smile endlessly, and to love you wholeheartedly. Today marks the start of something truly wonderful for us.🌹</p>
+        <button class="modal-close" onclick="closeModal()">Kiss me now! 💋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+
+  /* ---- CONFETTI ENGINE ---- */
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var running = false;
+  var animId;
+
+  function resizeCanvas() {
+    var app = document.getElementById('bday-app');
+    canvas.width  = app.offsetWidth;
+    canvas.height = app.offsetHeight;
+  }
+
+  function spawnConfetti(n) {
+    var colors = ['#C17B7B','#C4A882','#7A9E7E','#B8860B','#EDD5C5','#6B4C3B','#A0785A'];
+    for (var i = 0; i < n; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: -10,
+        vx: (Math.random()-0.5)*3,
+        vy: Math.random()*3+1.5,
+        rot: Math.random()*360,
+        rspeed: (Math.random()-0.5)*8,
+        w: Math.random()*8+4,
+        h: Math.random()*4+3,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        life: 1
+      });
+    }
+  }
+
+  function animateConfetti() {
+    resizeCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = particles.length-1; i >= 0; i--) {
+      var p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.rot += p.rspeed;
+      p.life -= 0.004;
+      if (p.y > canvas.height || p.life <= 0) { particles.splice(i,1); continue; }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.globalAlpha = Math.min(1, p.life*2);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    }
+    if (particles.length > 0) { animId = requestAnimationFrame(animateConfetti); }
+    else { running = false; }
+  }
+
+  function launchConfetti(n) {
+    n = n || 80;
+    resizeCanvas();
+    spawnConfetti(n);
+    if (!running) { running = true; animateConfetti(); }
+  }
+
+  /* ---- SURPRISE BUTTON ---- */
+  window.handleSurprise = function() {
+    launchConfetti(120);
+    var btn = document.querySelector('.btn-surprise');
+    btn.textContent = 'Woohoo! Happiness overload 💖🎊';
+    btn.style.background = 'linear-gradient(135deg, #7A9E7E, #5C8060)';
+  };
+
+  /* ---- SLIDESHOW ---- */
+  var slideCount = 6;
+  var curSlide = 0;
+  var dotsEl = document.getElementById('dots');
+
+  for (var d = 0; d < slideCount; d++) {
+    var dot = document.createElement('div');
+    dot.className = 'dot' + (d===0?' active':'');
+    dot.setAttribute('data-idx', d);
+    dot.addEventListener('click', function() { goSlide(+this.getAttribute('data-idx')); });
+    dotsEl.appendChild(dot);
+  }
+
+  function goSlide(idx) {
+    curSlide = idx;
+    document.getElementById('slides').style.transform = 'translateX(-' + (idx*100) + '%)';
+    var dots = document.querySelectorAll('.dot');
+    dots.forEach(function(d,i){ d.className = 'dot'+(i===idx?' active':''); });
+  }
+
+  var slideTimer = setInterval(function() {
+    goSlide((curSlide+1) % slideCount);
+  }, 3000);
+
+  /* ---- BALLOONS FOOTER ---- */
+  var balloonArea = document.getElementById('balloonArea');
+  var bColors = ['#C17B7B','#C4A882','#7A9E7E','#B8860B','#EDD5C5'];
+  for (var b = 0; b < 7; b++) {
+    (function(idx) {
+      var balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      var bw = 28 + Math.random()*16;
+      var bh = bw * 1.25;
+      balloon.innerHTML = '<svg width="'+bw+'" height="'+(bh+14)+'" viewBox="0 0 '+bw+' '+(bh+14)+'"><ellipse cx="'+(bw/2)+'" cy="'+(bh/2)+'" rx="'+(bw/2-1)+'" ry="'+(bh/2-1)+'" fill="'+bColors[idx%bColors.length]+'"/><line x1="'+(bw/2)+'" y1="'+bh+'" x2="'+(bw/2)+'" y2="'+(bh+14)+'" stroke="#A0785A" stroke-width="1.2"/></svg>';
+      balloon.style.left = (8 + idx * 13 + Math.random()*6) + '%';
+      balloon.style.animationDelay = (idx * 0.7 + Math.random()) + 's';
+      balloon.style.animationDuration = (4 + Math.random()*2) + 's';
+      balloonArea.appendChild(balloon);
+    })(b);
+  }
+
+  /* ---- PAGE NAVIGATION ---- */
+  window.goPage2 = function() {
+    document.getElementById('page1').classList.remove('active');
+    document.getElementById('page2').classList.add('active');
+    clearInterval(slideTimer);
+  };
+
+  /* ---- PAGE 2 INTERACTIONS ---- */
+  var noMsgs = [
+    "Oops, try again 😅",
+    "Hm, yakin nih? 🤔",
+    "Coba sekali lagi yuk~ 🥺",
+    "Tombol Yes-nya lebih menarik lho ✨",
+    "Ahh.. pencet yes gak!? 😢",
+  ];
+  var noCount = 0;
+
+  window.handleNo = function() {
+    document.getElementById('noMsg').textContent = noMsgs[noCount % noMsgs.length];
+    noCount++;
+    var btn = document.querySelector('.btn-no');
+    btn.style.transform = 'translate(' + ((Math.random()-0.5)*60) + 'px,' + ((Math.random()-0.5)*30) + 'px)';
+    setTimeout(function(){ btn.style.transform = ''; }, 500);
+  };
+
+  window.handleYes = function() {
+    document.getElementById('modal').classList.add('open');
+    launchConfetti(200);
+    setTimeout(function(){ launchConfetti(150); }, 800);
+    setTimeout(function(){ launchConfetti(100); }, 1600);
+  };
+
+  window.closeModal = function() {
+    document.getElementById('modal').classList.remove('open');
+    launchConfetti(80);
+  };
+
+  /* initial gentle confetti */
+  setTimeout(function() { launchConfetti(60); }, 600);
+  resizeCanvas();
+
+})();
+</script>
